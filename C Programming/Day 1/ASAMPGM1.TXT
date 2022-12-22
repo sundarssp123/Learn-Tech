@@ -1,0 +1,71 @@
+***********************************************************************         
+* PGM TITLE : ARTITHAMATIC OPERATION                                  *         
+* PURPOSE   : PERFORM ARITHAMATIC OPERATION IN PACKED DECIMAL NUMBERS *         
+* AUTHOR    : SUNDAR_VTAM                                             *         
+* DATE      : 23-08-2022                                              *         
+***********************************************************************         
+ARITHMAT CSECT                                                                  
+         BALR 12,0                                                              
+         USING *,12                                                             
+         STM 14,12,12(13)                                                       
+         ST 13,SAVEAREA+4                                                       
+         LA 14,SAVEAREA                                                         
+         ST 14,8(,13)                                                           
+         LA 13,SAVEAREA                                                         
+********************************* ACTUAL PGM *************                      
+         OPEN (FOUT,OUTPUT)                                                     
+         WTO 'FILE OPEN'                                                        
+         PUT FOUT,TITLE                                                         
+         PUT FOUT,BLANKA1                                                       
+ADD      AP APK,BPK                                                             
+         WTO 'ADD SUCCESS'                                                      
+         MVC SUBTITLE(17),=C'ADDTION RESULT IS'                                 
+         BAS 8,PRINT                                                            
+MUL      MP APK,BPK                                                             
+         WTO 'MUL SUCCESS'                                                      
+         MVC SUBTITLE(21),=C'SUBTRACTION RESULT IS'                             
+         BAS 8,PRINT                                                            
+SUB      SP APK,BPK                                                             
+         WTO 'SUB SUCCESS'                                                      
+         MVC SUBTITLE(24),=C'MULTIPLICATION RESULT IS'                          
+         BAS 8,PRINT                                                            
+DEV      ZAP DEVED,APK                                                          
+         AP BPK,CPK                                                             
+         DP DEVED,BPK                                                           
+         WTO 'DEV SUCCESS'                                                      
+         ED OUTRES,DEVED                                                        
+         MVC SUBTITLE(38),=C'DEVISION RESULT FOR QUOTIENT,REMAINDER'            
+         PUT FOUT,SUBTITLE                                                      
+         PUT FOUT,OUTRES                                                        
+         B FILECLS                                                              
+PRINT    ZAP VAR1,APK                                                           
+         MVC OUTRES,MASK                                                        
+         ED OUTRES,VAR1                                                         
+         PUT FOUT,SUBTITLE                                                      
+         PUT FOUT,OUTRES                                                        
+         BR 8                                                                   
+FILECLS  CLOSE (FOUT)                                                           
+         WTO 'FILE CLOSE'                                                       
+********************************* ACTUAL PGM END *************                  
+         L 13,SAVEAREA+4                                                        
+         LM 14,12,12(13)                                                        
+         L 15,0                                                                 
+         BR 14                                                                  
+         WTO 'PROGRAM EXECUTION END'                                            
+***************************************************************                 
+SAVEAREA DS  18F                                                                
+VAR1     DS  PL7                                                                
+MASK     DC  X'20202020202020202020202020'                                      
+OUTRES   DS  CL13                                                               
+BLANKA1  DS  CL80                                                               
+TITLE    DC  CL40'ARITHAMATIC OPERATION IN ASSEMBLER'                           
+SUBTITLE DS  CL50                                                               
+BLANKA2  DS  CL80                                                               
+APK      DC  PL4'10'                                                            
+BPK      DC  PL2'5'                                                             
+CPK      DC  PL1'1'                                                             
+DEVED    DS  0PL6                                                               
+QUO1     DS  PL4                                                                
+REM1     DS  PL2                                                                
+FOUT     DCB DDNAME=OUTFILE,DSORG=PS,MACRF=PM                                   
+         END ARITHMAT                                                           
